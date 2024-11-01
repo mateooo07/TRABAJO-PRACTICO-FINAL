@@ -330,6 +330,8 @@ class Program
         int[] asientos = new int[capacidadMaxima];
 
         Vuelo vuelo = new Vuelo(clasificacion, codigoVuelo, fechaSalidayHora, FechaLlegadayHora, nombrePiloto, nombreCopiloto, capacidadMaxima, asientos);
+
+        listaDeVuelos.Add(vuelo);
      
 
     }
