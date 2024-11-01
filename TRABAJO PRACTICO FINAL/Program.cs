@@ -176,7 +176,6 @@ class Program
                 return "";
         }
     }
-
     static void EsperarYVolverAlMenu() // Espera que el usuario presione 'M' para volver al menú.
     {
         ConsoleKeyInfo volverMenu;
@@ -204,8 +203,6 @@ class Program
         List<Vuelo> listaDeVuelos = new List<Vuelo>();
         return listaDeVuelos;
     }
-
-
     static void CreaciónVuelo(List<Vuelo> listaDeVuelos)
     {
         string clasificacion;
@@ -336,4 +333,72 @@ class Program
 
     }
 
-}
+    static void MostrarEstadoVuelo()
+    {
+        Console.ForegroundColor = ConsoleColor.Blue;
+        if (vueloCreado)
+        {
+            Console.WriteLine("|-----------------------------------------------------------------------------------------------------|");
+            Console.WriteLine("|                                           ESTADO DEL VUELO                                          |");
+            Console.WriteLine("|-----------------------------------------------------------------------------------------------------|");
+            Console.WriteLine("|----ASIENTO1----|----ASIENTO2----|----ASIENTO3----|----ASIENTO4----|----ASIENTO5----|----ASIENTO6----|");
+            Console.ResetColor();
+            for (int i = 0; i < asientos.Length; i++)
+            {
+
+                for (int j = 0; j < asientos[i].Length; j++)
+                {
+                    string fila = (i + 1).ToString("D2");
+                    string asiento = (j + 1).ToString();
+                    if (asientos[i][j] == 1)
+                    {
+                        if (asiento == "1")
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.Write("|");
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write($"F{fila}A{asiento}:RESERVADO".PadRight(16)); // Alinear
+                            Console.ResetColor();
+
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.Write("|");
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write($"F{fila}A{asiento}:RESERVADO".PadRight(16)); // Alinear
+                            Console.ResetColor();
+                        }
+
+
+                    }
+                    else
+                    {
+
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write("|");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write($"F{fila}A{asiento}:LIBRE".PadRight(16)); // Alinear
+                        Console.ResetColor();
+
+
+                    }
+                }
+
+                // Separador de final de fila
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine("|");
+                Console.ResetColor();
+            }
+
+            // Línea final de la tabla
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("|----------------|----------------|----------------|----------------|----------------|----------------|");
+            Console.ResetColor();
+        }
+
+
+
+
+
+    }
