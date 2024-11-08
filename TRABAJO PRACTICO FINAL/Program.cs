@@ -1,11 +1,17 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using TRABAJO_PRACTICO_FINAL;
 
 class Program
 {
+    public static bool vueloCreado = false;
+    public static List<Vuelo> listaDeVuelos = new List<Vuelo>();
+    public static int indiceLista;
     static void Main()
     {
+        DatosAerolinea();
         Inicio();
         Menú();
     }
@@ -97,41 +103,55 @@ class Program
         {
             case 0:
                 Console.Clear();
+                CreaciónVuelo(listaDeVuelos, ref vueloCreado);
                 EsperarYVolverAlMenu();
                 break;
             case 1:
                 Console.Clear();
-                
+                Vuelo.RegistrarPasajeros(listaDeVuelos);
                 EsperarYVolverAlMenu();
                 break;
             case 2:
                 Console.Clear();
-                
+                Vuelo.CalcularOcupacionMedia(listaDeVuelos);
                 EsperarYVolverAlMenu();
                 break;
             case 3:
                 Console.Clear();
-               
+                Vuelo.VueloConMayorOcupacion(listaDeVuelos);
                 Thread.Sleep(1500);
                 EsperarYVolverAlMenu();
                 break;
             case 4:
                 Console.Clear();
-              
+                Vuelo.BuscarVueloPorCodigo(listaDeVuelos);
+                if (vueloCreado)  // Verifica si el vuelo fue creado
+                {
+                    Console.WriteLine("Llamando a MostrarEstadoVuelo...");
+                    MostrarEstadoVuelo(vueloCreado, listaDeVuelos, indiceLista);
+                }
+                else
+                {
+                    Console.WriteLine("El vuelo no ha sido creado. No se puede mostrar el estado del vuelo.");
+                }
                 EsperarYVolverAlMenu();
                 break;
             case 5:
-                
+                Console.Clear();
+
                 EsperarYVolverAlMenu();
                 break;
             case 6:
+                Console.Clear();
+
+                EsperarYVolverAlMenu();
+                break;
+            case 7:
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Saliendo del sistema...");
                 Thread.Sleep(1500);
                 Console.ResetColor();
-                break;
-            case 7:
                 break;
         }
     }
@@ -195,66 +215,71 @@ class Program
         }
         Menú(); // Volver al menú principal
     }
-    static List<Vuelo> DatosAerolinea()
+    public static void DatosAerolinea()
     {
         string razonSocial = "Aerolíneas Argentinas S.A";
         string telefono = "011 5199-3555";
         string domicilio = "Aeroparque Jorge Newbery, CABA, Argentina";
-        List<Vuelo> listaDeVuelos = new List<Vuelo>();
-        return listaDeVuelos;
     }
-    static void CreaciónVuelo(List<Vuelo> listaDeVuelos)
+    static void CreaciónVuelo(List<Vuelo> listaDeVuelos,ref bool vueloCreado)
     {
         string clasificacion;
         string codigoVuelo = "";
         bool numeroNombrePiloto = false;
         bool numeroNombreCopiloto = false;
+        int contador = 0;
+        bool capacidadMaximaValida = false;
         Console.Clear();
-    
+
         Console.Write("Escriba la clasifición del vuelo (Internacional / Nacional): ");
         clasificacion = Console.ReadLine();
-        clasificacion.ToLower();
-        if (clasificacion != "internacional" || clasificacion != "nacional")
+        clasificacion = clasificacion.ToLower();
+        if (clasificacion != "internacional" && clasificacion != "nacional")
         {
+            Console.Clear();
             Console.Write("Escriba de nuevo la clasificación del vuelo.");
             return;
         }
-        else if(clasificacion == "internacional")
+        else if (clasificacion == "internacional")
         {
-            Console.WriteLine("Al tratarse de un vuelo internacional el código de vuelo sera un número igual o superior a 400, junto a un AA ya impuesto por el programa.");
+            Console.WriteLine("\nAl tratarse de un vuelo internacional el código de vuelo sera un número igual o superior a 400, junto a un 'AA' ya impuesto por el programa.");
             Console.Write("Escriba el código de vuelo: ");
             string entrada = Console.ReadLine();
-            if(int.TryParse(entrada, out int codigo))
+            if (int.TryParse(entrada, out int codigo))
             {
-                if(codigo<400)
+                if (codigo < 400)
                 {
+                    Console.Clear();
                     Console.Write("Debe escribir un número igual o superior a 400.");
                     return;
                 }
-                
+
             }
             else
             {
+                Console.Clear();
                 Console.Write("Debe escribir un número.");
                 return;
             }
             codigoVuelo = "AA" + codigo.ToString();
         }
-        else if(clasificacion == "nacional")
+        else if (clasificacion == "nacional")
         {
-            Console.WriteLine("Al tratarse de un vuelo nacional el código de vuelo sera un número igual o superior a 100 y menor a 400, junto a un AA ya impuesto por el programa.");
+            Console.WriteLine("\nAl tratarse de un vuelo nacional el código de vuelo sera un número igual o superior a 100 y menor a 400, junto a un 'AA' ya impuesto por el programa.");
             Console.Write("Escriba el código de vuelo: ");
             string entrada = Console.ReadLine();
-            if(int.TryParse(entrada, out int codigo))
+            if (int.TryParse(entrada, out int codigo))
             {
                 if (codigo < 100 || codigo >= 400)
                 {
+                    Console.Clear();
                     Console.Write("Debe escribir un número igual o superior a 100 y menor a 400.");
                     return;
                 }
             }
             else
             {
+                Console.Clear();
                 Console.Write("Debe escribir un número.");
                 return;
             }
@@ -262,143 +287,192 @@ class Program
             codigoVuelo = "AA" + codigo.ToString();
         }
 
-        Console.Write("Ingresa la fecha de salida (forma preferida: dd/mm/yyyy HH:mm):");
+        Console.Write("\nIngresa la fecha de salida (forma preferida: dd/mm/yyyy HH:mm):");
         string fechaUsuario = Console.ReadLine();
+        int fechaSalidaLenght = fechaUsuario.Length;
         if (DateTime.TryParse(fechaUsuario, out DateTime fechaSalidayHora))
         {
-            if(fechaSalidayHora<DateTime.Now)
+            if (fechaSalidayHora < DateTime.Now)
             {
+                Console.Clear();
                 Console.WriteLine("Escriba una fecha posterior o igual a la actual.");
+                return;
             }
         }
-        else
+        else if(fechaSalidaLenght < 16)
         {
+            Console.Clear();
             Console.WriteLine("Escriba un formato de fecha válido.");
-        }
-        Console.Write("Ingrese la fecha de llegada (forma preferida: dd/mm/yyyy HH:mm): ");
-        fechaUsuario = Console.ReadLine();
-        if(DateTime.TryParse(fechaUsuario, out DateTime FechaLlegadayHora))
-        {
-            if(FechaLlegadayHora<= fechaSalidayHora)
-            {
-                Console.WriteLine("Escriba una fecha posterior a la fecha de salida.");
-            }
+            return;
         }
         else
         {
-            Console.WriteLine("Escriba un formato de fecha valido.");
+            Console.Clear();
+            Console.WriteLine("Escriba un formato de fecha válido.");
+            return;
         }
-        Console.Write("Escriba el nombre y apellido del piloto: ");
-        string nombrePiloto = Console.ReadLine();
-        foreach(char caracter in nombrePiloto)
+        Console.Write("\nIngrese la fecha de llegada (forma preferida: dd/mm/yyyy HH:mm): ");
+        fechaUsuario = Console.ReadLine();
+        int fechaLlegadaLenght = fechaUsuario.Length;
+        if (DateTime.TryParse(fechaUsuario, out DateTime FechaLlegadayHora))
         {
-            if(Char.IsDigit(caracter))
+            if (FechaLlegadayHora <= fechaSalidayHora)
             {
+                Console.Clear();
+                Console.WriteLine("Escriba una fecha posterior a la fecha de salida.");
+                return;
+            }
+        }
+        else if(fechaLlegadaLenght < 16)
+        {
+            Console.Clear();
+            Console.WriteLine("Escriba un formato de fecha válido.");
+            return;
+        }
+        else
+        {
+            Console.Clear();
+            Console.WriteLine("Escriba un formato de fecha valido.");
+            return;
+        }
+        Console.Write("\nEscriba el nombre y apellido del piloto: ");
+        string nombrePiloto = Console.ReadLine();
+        foreach (char caracter in nombrePiloto)
+        {
+            if (Char.IsDigit(caracter))
+            {
+                Console.Clear();
                 Console.WriteLine("Escriba un nombre válido.");
                 return;
             }
         }
 
-        Console.Write("Escriba el nombre y apellido del copiloto: ");
+        Console.Write("\nEscriba el nombre y apellido del copiloto: ");
         string nombreCopiloto = Console.ReadLine();
-        foreach(char caracter in nombreCopiloto)
+        foreach (char caracter in nombreCopiloto)
         {
-            if(Char.IsDigit(caracter))
+            if (Char.IsDigit(caracter))
             {
+                Console.Clear();
                 Console.WriteLine("Escriba un nombre válido.");
                 return;
             }
         }
-        Console.Write("Escriba la capacidad maxima del vuelo, lo minimo son 60 asientos: ");
+        Console.WriteLine("\nDetermine la capacidad máxima del vuelo, lo mínimo son 60 asientos, y lo máximo 200 asientos.");
+        Console.WriteLine("Tenga en cuenta que deberá saltar de 10 en 10 en tamaño (60 - 70 - 80 - etc).");
+        Console.Write("\nEscriba la capacidad: ");
         string entrada1 = Console.ReadLine();
+
+        // Verificar si la entrada es un número válido
         if (int.TryParse(entrada1, out int capacidadMaxima))
         {
-            if(capacidadMaxima<60)
+            // Verificar si el número está entre 60 y 200 y es múltiplo de 10
+            if (capacidadMaxima >= 60 && capacidadMaxima <= 200 && capacidadMaxima % 10 == 0)
             {
-                Console.WriteLine("Escriba una capacidad maxima válida.");
+                Console.WriteLine("\nvuelo Creado.");
+                vueloCreado = true;
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Escriba una capacidad máxima válida (entre 60 y 200, múltiplo de 10).");
             }
         }
         else
         {
-            Console.WriteLine("Escriba un número.");
+            Console.Clear();
+            Console.WriteLine("Escriba un número");
+            return;
         }
 
-        
-        int[] asientos = new int[capacidadMaxima];
+        int filas = capacidadMaxima / 10;
+        int[][] asientos = new int[filas][];
+        for (int i = 0; i < filas; i++)
+        {
+            asientos[i] = new int[10];
+        }
 
         Vuelo vuelo = new Vuelo(clasificacion, codigoVuelo, fechaSalidayHora, FechaLlegadayHora, nombrePiloto, nombreCopiloto, capacidadMaxima, asientos);
 
         listaDeVuelos.Add(vuelo);
-     
 
     }
 
-    static void MostrarEstadoVuelo()
+    static void MostrarEstadoVuelo(bool vueloCreado, List<Vuelo> listaDeVuelos, int indiceLista)
     {
         Console.ForegroundColor = ConsoleColor.Blue;
         if (vueloCreado)
         {
-            Console.WriteLine("|-----------------------------------------------------------------------------------------------------|");
-            Console.WriteLine("|                                           ESTADO DEL VUELO                                          |");
-            Console.WriteLine("|-----------------------------------------------------------------------------------------------------|");
-            Console.WriteLine("|----ASIENTO1----|----ASIENTO2----|----ASIENTO3----|----ASIENTO4----|----ASIENTO5----|----ASIENTO6----|");
-            Console.ResetColor();
-            for (int i = 0; i < asientos.Length; i++)
+            if (indiceLista == -1)
             {
-
-                for (int j = 0; j < asientos[i].Length; j++)
+                return;
+            }
+            else
+            {
+                int[][] asientos = listaDeVuelos[indiceLista].asientos;
+                Console.WriteLine("|-----------------------------------------------------------------------------------------------------|");
+                Console.WriteLine("|                                           ESTADO DEL VUELO                                          |");
+                Console.WriteLine("|-----------------------------------------------------------------------------------------------------|");
+                Console.WriteLine("|----ASIENTO1----|----ASIENTO2----|----ASIENTO3----|----ASIENTO4----|----ASIENTO5----|----ASIENTO6----|");
+                Console.ResetColor();
+                for (int i = 0; i < asientos.Length; i++)
                 {
-                    string fila = (i + 1).ToString("D2");
-                    string asiento = (j + 1).ToString();
-                    if (asientos[i][j] == 1)
+
+                    for (int j = 0; j < asientos[i].Length; j++)
                     {
-                        if (asiento == "1")
+                        string fila = (i + 1).ToString("D2");
+                        string asiento = (j + 1).ToString();
+                        if (asientos[i][j] == 1)
                         {
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.Write("|");
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write($"F{fila}A{asiento}:RESERVADO".PadRight(16)); // Alinear
-                            Console.ResetColor();
+                            if (asiento == "1")
+                            {
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.Write("|");
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write($"F{fila}A{asiento}:RESERVADO".PadRight(16)); // Alinear
+                                Console.ResetColor();
+
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.Write("|");
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write($"F{fila}A{asiento}:RESERVADO".PadRight(16)); // Alinear
+                                Console.ResetColor();
+                            }
+
 
                         }
                         else
                         {
+
                             Console.ForegroundColor = ConsoleColor.Blue;
                             Console.Write("|");
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write($"F{fila}A{asiento}:RESERVADO".PadRight(16)); // Alinear
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.Write($"F{fila}A{asiento}:LIBRE".PadRight(16)); // Alinear
                             Console.ResetColor();
+
+
                         }
-
-
                     }
-                    else
-                    {
 
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.Write("|");
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write($"F{fila}A{asiento}:LIBRE".PadRight(16)); // Alinear
-                        Console.ResetColor();
-
-
-                    }
+                    // Separador de final de fila
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("|");
+                    Console.ResetColor();
                 }
 
-                // Separador de final de fila
+                // Línea final de la tabla
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine("|");
+                Console.WriteLine("|----------------|----------------|----------------|----------------|----------------|----------------|");
                 Console.ResetColor();
             }
-
-            // Línea final de la tabla
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("|----------------|----------------|----------------|----------------|----------------|----------------|");
-            Console.ResetColor();
         }
 
-
-
-
-
     }
+
+
+
+
+}
