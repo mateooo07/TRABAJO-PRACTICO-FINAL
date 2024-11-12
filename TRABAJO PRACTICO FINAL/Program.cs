@@ -19,6 +19,7 @@ class Program
     {
         DatosAerolinea();
         Inicio();
+        CargarDesdeXML(filePath);
         Console.WindowHeight = 45;
         Console.WindowWidth = 180;
         Menú(aerolinea);
@@ -640,6 +641,7 @@ class Program
                 using (FileStream stream = new FileStream(filePath, FileMode.Open))
                 {
                     aerolinea = (Aerolínea)serializer.Deserialize(stream);
+                    listaDeVuelos = aerolinea.listaDeVuelos ?? new List<Vuelo>();
                     Console.WriteLine("Datos cargados correctamente desde el archivo XML.");
                     return aerolinea;
                 }

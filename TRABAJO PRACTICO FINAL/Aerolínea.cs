@@ -15,6 +15,10 @@ namespace TRABAJO_PRACTICO_FINAL
         public string domicilio { get; set; }
         public List<Vuelo> listaDeVuelos { get; set; }
 
+        public Aerolínea()
+        {
+            listaDeVuelos = new List<Vuelo>();
+        }
         public Aerolínea(string razonSocial, string telefono, string domicilio, List<Vuelo> listaDeVuelos)
         {
             this.razonSocial = razonSocial;

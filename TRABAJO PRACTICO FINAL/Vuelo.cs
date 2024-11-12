@@ -19,6 +19,11 @@ namespace TRABAJO_PRACTICO_FINAL
         public int capacidadMaxima { get; set; }
         public int capacidadDisponible { get; set; }
         public int[][] asientos { get; set; }
+
+        public Vuelo()
+        {
+            
+        }
         public Vuelo(string clasificación, string codigoVuelo, DateTime fechaSalida, DateTime fechaLlegada,
                      string nombrePiloto, string nombreCopiloto, int capacidadMaxima, int[][] asientos)
         {
