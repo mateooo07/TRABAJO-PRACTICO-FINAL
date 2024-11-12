@@ -59,7 +59,7 @@ namespace TRABAJO_PRACTICO_FINAL
                         {
                             listaDeVuelos[i].capacidadDisponible -= cantidadPasajeros;
                             int cantidadDeFilas = listaDeVuelos[i].capacidadMaxima / 10;
-                            while(contador == cantidadPasajeros)
+                            while (contador != cantidadPasajeros)
                             {
                                 Console.Write("Escriba la fila del asiento: ");
                                 entrada = Console.ReadLine();
@@ -76,6 +76,7 @@ namespace TRABAJO_PRACTICO_FINAL
                                         entrada = Console.ReadLine();
                                         if (int.TryParse(entrada, out int asiento))
                                         {
+                                            asiento--;
                                             if (asiento < 0 || asiento > 10)
                                             {
                                                 Console.WriteLine($"Escriba un número de asiento valido. El numero de asientos del vuelo con el código {codigoVuelo} es de: 10 asientos.");
@@ -104,15 +105,15 @@ namespace TRABAJO_PRACTICO_FINAL
                                 {
                                     Console.WriteLine("Escriba un número.");
                                 }
-                            }      
+                            }
                         }
-                            Console.WriteLine($"{cantidadPasajeros} Pasajeros registrados.");
+                        Console.WriteLine($"{cantidadPasajeros} Pasajeros registrados.");
                         listaDeVuelos[i].capacidadDisponible = listaDeVuelos[i].capacidadMaxima - cantidadPasajeros;
                     }
                 }
             }
         }
-        
+
 
 
         public static void CalcularOcupacionMedia(List<Vuelo> listaDeVuelos)
@@ -129,9 +130,9 @@ namespace TRABAJO_PRACTICO_FINAL
 
                 Console.WriteLine($"Porcentaje de ocupación del vuelo {listaDeVuelos[i].codigoVuelo}: {ocupacionVuelo}%.");
 
-                asientosOcupadosDeFlota = +asientosOcupados;
+                asientosOcupadosDeFlota = asientosOcupadosDeFlota + asientosOcupados;
 
-                asientosDisponiblesDeFlota = +listaDeVuelos[i].capacidadDisponible;
+                asientosDisponiblesDeFlota = asientosDisponiblesDeFlota + listaDeVuelos[i].capacidadDisponible;
 
             }
 
