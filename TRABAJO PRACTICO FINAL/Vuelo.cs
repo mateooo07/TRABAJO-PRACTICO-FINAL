@@ -259,13 +259,10 @@ namespace TRABAJO_PRACTICO_FINAL
                         return indiceLista;
                     }
                 }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("El código proporcionado no coincide con el código de ningún vuelo registrado.");
-                    return indiceLista;
-                }
             }
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Clear();
+            Console.WriteLine("El código proporcionado no coindice con el código de ningún vuelo.");
             return indiceLista;
 
 
