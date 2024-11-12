@@ -153,17 +153,15 @@ namespace TRABAJO_PRACTICO_FINAL
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine($"{cantidadPasajeros} Pasajeros registrados.");
                             listaDeVuelos[i].capacidadDisponible = listaDeVuelos[i].capacidadMaxima - cantidadPasajeros;
+                            return;
                         }
                     }
                     
                 }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Clear();
-                    Console.WriteLine("El código proporcionado no coincide con el de ningún vuelo creado.\n");
-                }
             }
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Clear();
+            Console.WriteLine("El código proporcionado no coincide con el código de ningún vuelo.");
         }
 
 
@@ -176,11 +174,12 @@ namespace TRABAJO_PRACTICO_FINAL
             int asientosDisponiblesDeFlota = 0;
             for (int i = 0; i < listaDeVuelos.Count; i++)
             {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
                 int asientosOcupados = listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible;
 
-                int ocupacionVuelo = (asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
+                double ocupacionVuelo = ((double)asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
 
-                Console.WriteLine($"Porcentaje de ocupación del vuelo {listaDeVuelos[i].codigoVuelo}: {ocupacionVuelo}%.");
+                Console.WriteLine($"Porcentaje de ocupación del vuelo {listaDeVuelos[i].codigoVuelo}: {ocupacionVuelo}%.\n");
 
                 asientosOcupadosDeFlota = asientosOcupadosDeFlota + asientosOcupados;
 
@@ -188,8 +187,9 @@ namespace TRABAJO_PRACTICO_FINAL
 
             }
 
-            int ocupacionMedia = (asientosOcupadosDeFlota / asientosDisponiblesDeFlota) * 100;
-            Console.WriteLine($"El porcentaje de la ocupacion media de la flota es de {ocupacionMedia}%.");
+            double ocupacionMedia = ((double)asientosOcupadosDeFlota / (asientosOcupadosDeFlota + asientosDisponiblesDeFlota)) * 100;
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"El porcentaje de la ocupación media de la flota es de {ocupacionMedia}%.");
 
         }
 
@@ -197,12 +197,12 @@ namespace TRABAJO_PRACTICO_FINAL
         {
             Console.Clear();
             string codigoVueloMayorOcupacion = "";
-            int porcentajeVueloConMayorOcupacion = 0;
+            double porcentajeVueloConMayorOcupacion = 0;
             for (int i = 0; i < listaDeVuelos.Count; i++)
             {
                 int asientosOcupados = listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible;
 
-                int ocupacionVuelo = (asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
+                double ocupacionVuelo = ((double)asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
 
                 if (ocupacionVuelo > porcentajeVueloConMayorOcupacion)
                 {
@@ -210,7 +210,7 @@ namespace TRABAJO_PRACTICO_FINAL
                     codigoVueloMayorOcupacion = listaDeVuelos[i].codigoVuelo;
                 }
             }
-
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine($"El vuelo con mayor ocupación es el vuelo {codigoVueloMayorOcupacion}. Tiene una ocupación de {porcentajeVueloConMayorOcupacion}%.");
         }
 
@@ -230,10 +230,12 @@ namespace TRABAJO_PRACTICO_FINAL
                 {
                     Console.ForegroundColor = ConsoleColor.DarkCyan;
                     int asientosOcupados = listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible;
-                    int ocupacionVuelo = (asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
+                    double ocupacionVuelo = ((double)asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
                     if (codigoUsuario == listaDeVuelos[i].codigoVuelo)
                     {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.WriteLine("---------------------------------------------------------");
+                        Console.ForegroundColor = ConsoleColor.DarkCyan;
                         if (listaDeVuelos[i].clasificación == "internacional")
                         {
                             Console.WriteLine($"Clasificación del vuelo: Internacional.");
@@ -251,6 +253,7 @@ namespace TRABAJO_PRACTICO_FINAL
                         Console.WriteLine($"Capacidad maxima de asientos del vuelo: {listaDeVuelos[i].capacidadMaxima}.");
                         Console.WriteLine($"Ocupación: {listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible} / {listaDeVuelos[i].capacidadMaxima}.");
                         Console.WriteLine($"Porcentaje: {ocupacionVuelo}%.");
+                        Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.WriteLine("---------------------------------------------------------\n\n");
                         indiceLista = i;
                         return indiceLista;
@@ -270,12 +273,14 @@ namespace TRABAJO_PRACTICO_FINAL
 
         public static void ListaVuelos(List<Vuelo> listaDeVuelos)
         {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             for (int i = 0; i < listaDeVuelos.Count; i++)
             {
                 int asientosOcupados = listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible;
-                int ocupacionVuelo = (asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
+                double ocupacionVuelo = ((double)asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("---------------------------------------------------------");
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
                 if (listaDeVuelos[i].clasificación == "internacional")
                 {
                     Console.WriteLine($"Clasificación del vuelo: Internacional.");
@@ -295,6 +300,7 @@ namespace TRABAJO_PRACTICO_FINAL
                 Console.WriteLine($"Porcentaje: {ocupacionVuelo}%.");
                 if (i == listaDeVuelos.Count - 1)
                 {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("---------------------------------------------------------");
                 }
 

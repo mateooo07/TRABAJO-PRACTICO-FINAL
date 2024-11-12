@@ -19,7 +19,6 @@ class Program
     {
         DatosAerolinea();
         Inicio();
-        CargarDesdeXML(filePath);
         Console.WindowHeight = 45;
         Console.WindowWidth = 180;
         Menú(aerolinea);
@@ -256,7 +255,7 @@ class Program
         while (volverValido != true)
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("\nPresiona 'M' para volver al menú.");
+            Console.WriteLine("Presiona 'M' para volver al menú.");
 
             volverMenu = Console.ReadKey(true);
             Console.ResetColor();
@@ -606,12 +605,14 @@ class Program
     {
         if (string.IsNullOrEmpty(filePath))
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("La ruta del archivo no puede ser nula o vacía.");
             return;
         }
 
         try
         {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             XmlSerializer serializer = new XmlSerializer(typeof(Aerolínea));
             using (FileStream stream = new FileStream(filePath, FileMode.Create))
             {
@@ -621,6 +622,7 @@ class Program
         }
         catch (Exception ex)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Error al guardar los datos en XML: {ex.Message}");
         }
     }
@@ -629,6 +631,7 @@ class Program
     {
         if (string.IsNullOrEmpty(filePath))
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("La ruta del archivo no puede ser nula o vacía.");
             return null;
         }
@@ -640,6 +643,7 @@ class Program
                 XmlSerializer serializer = new XmlSerializer(typeof(Aerolínea));
                 using (FileStream stream = new FileStream(filePath, FileMode.Open))
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     aerolinea = (Aerolínea)serializer.Deserialize(stream);
                     listaDeVuelos = aerolinea.listaDeVuelos ?? new List<Vuelo>();
                     Console.WriteLine("Datos cargados correctamente desde el archivo XML.");
@@ -648,12 +652,14 @@ class Program
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("El archivo XML no existe.");
                 return null;
             }
         }
         catch (Exception ex)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Error al cargar los datos desde XML: {ex.Message}");
             return null;
         }
