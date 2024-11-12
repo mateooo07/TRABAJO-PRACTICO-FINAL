@@ -3,8 +3,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.IO;
-using System.Text.Json;
 using TRABAJO_PRACTICO_FINAL;
+using System.Text.Json;
+using System.Xml.Serialization;
 
 class Program
 {
@@ -12,8 +13,8 @@ class Program
     public static bool vueloCreado = false;
     public static List<Vuelo> listaDeVuelos = new List<Vuelo>();
     public static int indiceLista;
-    public static string filePath = "aerolinea.json";
     public static Aerolínea aerolinea;
+    public static string filePath = "aerolinea.xml";
     static void Main()
     {
         DatosAerolinea();
@@ -80,7 +81,7 @@ class Program
             Console.ResetColor();
 
 
-            for (int i = 0; i <= 7; i++)
+            for (int i = 0; i <= 8; i++)
             {
                 if (opcion == i)
                 {
@@ -100,7 +101,7 @@ class Program
             Flecha = Console.ReadKey(true);
             if (Flecha.Key == ConsoleKey.UpArrow && opcion > 0)
                 opcion--;
-            if (Flecha.Key == ConsoleKey.DownArrow && opcion < 6)
+            if (Flecha.Key == ConsoleKey.DownArrow && opcion < 8)
                 opcion++;
 
 
@@ -111,14 +112,13 @@ class Program
             case 0:
                 Console.Clear();
                 CreaciónVuelo(listaDeVuelos, ref vueloCreado);
-                Console.WriteLine(listaDeVuelos.Count);
                 EsperarYVolverAlMenu();
                 break;
             case 1:
                 Console.Clear();
-                if(vueloCreado)
+                if (vueloCreado)
                 {
-                    Vuelo.RegistrarPasajeros(listaDeVuelos, aerolinea, filePath);
+                    Vuelo.RegistrarPasajeros(listaDeVuelos, aerolinea);
                 }
                 else
                 {
@@ -128,7 +128,7 @@ class Program
                 break;
             case 2:
                 Console.Clear();
-                if(vueloCreado)
+                if (vueloCreado)
                 {
                     Vuelo.CalcularOcupacionMedia(listaDeVuelos);
                 }
@@ -165,7 +165,7 @@ class Program
                 break;
             case 5:
                 Console.Clear();
-                if(vueloCreado)
+                if (vueloCreado)
                 {
                     Vuelo.ListaVuelos(listaDeVuelos);
                 }
@@ -177,11 +177,19 @@ class Program
                 break;
             case 6:
                 Console.Clear();
-                CargarDatos(filePath, ref vueloCreado);
-                Console.WriteLine(listaDeVuelos.Count);
+                GuardarEnXML(aerolinea, "aerolinea.xml");
                 EsperarYVolverAlMenu();
                 break;
             case 7:
+                Console.Clear();
+                CargarDesdeXML("aerolinea.xml");
+                if(listaDeVuelos.Count > 0)
+                {
+                    vueloCreado = true;
+                }
+                EsperarYVolverAlMenu();
+                break;
+            case 8:
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Saliendo del sistema...");
@@ -221,9 +229,13 @@ class Program
                     "\n -----------------------------------------------------------------";
             case 6:
                 return "------------------------------------------------------------------\n" +
+                    " > Guardar datos                                                 |" +
+                    "\n -----------------------------------------------------------------";
+            case 7: 
+                return "------------------------------------------------------------------\n" +
                     " > Cargar datos                                                  |" +
                     "\n -----------------------------------------------------------------";
-            case 7:
+            case 8:
                 return "------------------------------------------------------------------\n" +
                     " > Salir del sistema.                                            |" +
                     "\n -----------------------------------------------------------------";
@@ -326,6 +338,14 @@ class Program
 
             codigoVuelo = "AA" + codigo.ToString();
         }
+        for (int i = 0; i < listaDeVuelos.Count; i++)
+        {
+            if(codigoVuelo == listaDeVuelos[i].codigoVuelo)
+            {
+                Console.WriteLine("Ya existe un vuelo con ese código de vuelo.");
+                return;
+            }
+        }
         while (true)
         {
             Console.Write("\nIngresa la fecha de salida (forma preferida: dd/mm/yyyy HH:mm):");
@@ -417,7 +437,7 @@ class Program
             {
                 Console.WriteLine("\nVuelo Creado.");
                 vueloCreado = true;
-                                GuardarArchivo(aerolinea, filePath);
+
             }
             else
             {
@@ -533,52 +553,59 @@ class Program
         }
 
     }
-
-    public static void GuardarArchivo(Aerolínea aerolinea, string filePath)
+    public static void GuardarEnXML(Aerolínea aerolinea, string filePath)
     {
+        if (string.IsNullOrEmpty(filePath))
+        {
+            Console.WriteLine("La ruta del archivo no puede ser nula o vacía.");
+            return;
+        }
+
         try
         {
-            string json = JsonSerializer.Serialize(aerolinea);
-            File.WriteAllText(filePath, json);
-            Console.WriteLine("Objeto guardado.");
+            XmlSerializer serializer = new XmlSerializer(typeof(Aerolínea));
+            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            {
+                serializer.Serialize(stream, aerolinea);
+            }
+            Console.WriteLine("Datos guardados exitosamente en formato XML.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error al guardar el objeto: {ex.Message}");
+            Console.WriteLine($"Error al guardar los datos en XML: {ex.Message}");
         }
-        
     }
 
-    static Aerolínea CargarDatos(string filePath, ref bool vueloCreado)
+    public static Aerolínea CargarDesdeXML(string filePath)
     {
-        try
+        if (string.IsNullOrEmpty(filePath))
         {
-            if(File.Exists(filePath))
-            {
-                string json = File.ReadAllText(filePath);
-
-                Aerolínea aerolinea = JsonSerializer.Deserialize<Aerolínea>(json);
-
-                Console.WriteLine("Datos cargados.");
-                vueloCreado = true;
-                return aerolinea;
-            }
-            else
-            {
-                Console.WriteLine("El archivo no existe.");
-                return null;
-                Thread.Sleep(2500);
-            }
-        }
-        catch(Exception ex)
-        {
-            Console.WriteLine($"Error al cargar el objeto: {ex.Message}");
-            Thread.Sleep(2500);
+            Console.WriteLine("La ruta del archivo no puede ser nula o vacía.");
             return null;
         }
 
-        return null;
-
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Aerolínea));
+                using (FileStream stream = new FileStream(filePath, FileMode.Open))
+                {
+                    aerolinea = (Aerolínea)serializer.Deserialize(stream);
+                    Console.WriteLine("Datos cargados correctamente desde el archivo XML.");
+                    return aerolinea;
+                }
+            }
+            else
+            {
+                Console.WriteLine("El archivo XML no existe.");
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar los datos desde XML: {ex.Message}");
+            return null;
+        }
     }
-
 }

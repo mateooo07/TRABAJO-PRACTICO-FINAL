@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace TRABAJO_PRACTICO_FINAL
 {
-    internal class Vuelo
+    [Serializable]
+    public class Vuelo // Cambiado de internal a public
     {
         public string clasificación { get; set; }
         public string codigoVuelo { get; set; }
@@ -18,7 +20,10 @@ namespace TRABAJO_PRACTICO_FINAL
         public int capacidadDisponible { get; set; }
         public int[][] asientos { get; set; }
 
-        public Vuelo(string clasificación, string codigoVuelo, DateTime fechaSalida, DateTime fechaLlegada, string nombrePiloto, string nombreCopiloto, int capacidadMaxima, int[][] asientos)
+        public Vuelo() { } // Constructor sin parámetros requerido
+
+        public Vuelo(string clasificación, string codigoVuelo, DateTime fechaSalida, DateTime fechaLlegada,
+                     string nombrePiloto, string nombreCopiloto, int capacidadMaxima, int[][] asientos)
         {
             this.clasificación = clasificación;
             this.codigoVuelo = codigoVuelo;
@@ -31,7 +36,9 @@ namespace TRABAJO_PRACTICO_FINAL
             this.asientos = asientos;
         }
 
-        public static void RegistrarPasajeros(List<Vuelo> listaDeVuelos, Aerolínea aerolinea, string filePath)
+
+
+        public static void RegistrarPasajeros(List<Vuelo> listaDeVuelos, Aerolínea aerolinea)
         {
             Console.Clear();
             int contador = 0;
@@ -109,7 +116,6 @@ namespace TRABAJO_PRACTICO_FINAL
                         }
                         Console.WriteLine($"{cantidadPasajeros} Pasajeros registrados.");
                         listaDeVuelos[i].capacidadDisponible = listaDeVuelos[i].capacidadMaxima - cantidadPasajeros;
-                        Program.GuardarArchivo(aerolinea, filePath);
                     }
                 }
             }
@@ -203,7 +209,7 @@ namespace TRABAJO_PRACTICO_FINAL
 
         public static void ListaVuelos(List<Vuelo> listaDeVuelos)
         {
-            for(int i = 0; i < listaDeVuelos.Count; i++)
+            for (int i = 0; i < listaDeVuelos.Count; i++)
             {
                 int asientosOcupados = listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible;
                 int ocupacionVuelo = (asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
@@ -225,18 +231,14 @@ namespace TRABAJO_PRACTICO_FINAL
                 Console.WriteLine($"Capacidad maxima de asientos del vuelo: {listaDeVuelos[i].capacidadMaxima}");
                 Console.WriteLine($"Ocupación: {listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible} / {listaDeVuelos[i].capacidadMaxima}");
                 Console.WriteLine($"Porcentaje: {ocupacionVuelo}%");
-                if(i == listaDeVuelos.Count)
+                if (i == listaDeVuelos.Count)
                 {
                     Console.WriteLine("---------------------------------------------------------");
                 }
-                
+
             }
         }
 
-
-
-
-
-
     }
 }
+

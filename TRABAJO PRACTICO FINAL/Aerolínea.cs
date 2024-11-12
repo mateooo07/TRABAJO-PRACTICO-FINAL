@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace TRABAJO_PRACTICO_FINAL
 {
-    internal class Aerolínea
+    [Serializable]
+    public class Aerolínea // Cambiado de internal a public
     {
         public string razonSocial { get; set; }
         public string telefono { get; set; }
         public string domicilio { get; set; }
         public List<Vuelo> listaDeVuelos { get; set; }
+
+        public Aerolínea() { } // Constructor sin parámetros requerido
 
         public Aerolínea(string razonSocial, string telefono, string domicilio, List<Vuelo> listaDeVuelos)
         {
@@ -22,3 +26,4 @@ namespace TRABAJO_PRACTICO_FINAL
         }
     }
 }
+
