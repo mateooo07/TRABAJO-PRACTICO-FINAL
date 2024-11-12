@@ -19,9 +19,6 @@ namespace TRABAJO_PRACTICO_FINAL
         public int capacidadMaxima { get; set; }
         public int capacidadDisponible { get; set; }
         public int[][] asientos { get; set; }
-
-        public Vuelo() { } // Constructor sin parámetros requerido
-
         public Vuelo(string clasificación, string codigoVuelo, DateTime fechaSalida, DateTime fechaLlegada,
                      string nombrePiloto, string nombreCopiloto, int capacidadMaxima, int[][] asientos)
         {
@@ -42,81 +39,124 @@ namespace TRABAJO_PRACTICO_FINAL
         {
             Console.Clear();
             int contador = 0;
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.Write("Escriba el código del vuelo al cual quiere registrarle cierta cantidad de pasajeros: ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
             string codigoVuelo = Console.ReadLine();
             for (int i = 0; i < listaDeVuelos.Count; i++)
             {
                 if (codigoVuelo == listaDeVuelos[i].codigoVuelo)
                 {
-                    Console.Write("Escriba la cantidad de pasajeros que quiera registrar en el vuelo: ");
-                    string entrada = Console.ReadLine();
-                    if (int.TryParse(entrada, out int cantidadPasajeros))
+                    if (listaDeVuelos[i].fechaLlegada < DateTime.Now)
                     {
-                        if (cantidadPasajeros > listaDeVuelos[i].capacidadMaxima)
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Clear();
+                        Console.WriteLine("No puede registrarle ningun pasajero a este vuelo, porque ya despego.\n");
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkCyan;
+                        Console.Write("Escriba la cantidad de pasajeros que quiera registrar en el vuelo: ");
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        string entrada = Console.ReadLine();
+                        if (int.TryParse(entrada, out int cantidadPasajeros))
                         {
-                            Console.WriteLine("La cantidad de pasajeros a registrar excede la capacidad maxima del vuelo.");
-                            return;
-                        }
-                        else if (cantidadPasajeros > listaDeVuelos[i].capacidadDisponible)
-                        {
-                            Console.WriteLine("La cantidad de pasajeros a registrar excede la cantidad disponible.");
-                            return;
-                        }
-                        else
-                        {
-                            listaDeVuelos[i].capacidadDisponible -= cantidadPasajeros;
-                            int cantidadDeFilas = listaDeVuelos[i].capacidadMaxima / 10;
-                            while (contador != cantidadPasajeros)
+                            if (cantidadPasajeros > listaDeVuelos[i].capacidadMaxima)
                             {
-                                Console.Write("Escriba la fila del asiento: ");
-                                entrada = Console.ReadLine();
-                                if (int.TryParse(entrada, out int fila))
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Clear();
+                                Console.WriteLine("La cantidad de pasajeros a registrar excede la capacidad maxima del vuelo.\n");
+                                return;
+                            }
+                            else if (cantidadPasajeros > listaDeVuelos[i].capacidadDisponible)
+
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Clear();
+                                Console.WriteLine("La cantidad de pasajeros a registrar excede la cantidad disponible.\n");
+                                return;
+                            }
+                            else
+                            {
+                                listaDeVuelos[i].capacidadDisponible -= cantidadPasajeros;
+                                int cantidadDeFilas = listaDeVuelos[i].capacidadMaxima / 10;
+                                while (contador != cantidadPasajeros)
                                 {
-                                    fila--;
-                                    if (fila < 0 || fila > cantidadDeFilas)
+                                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                                    Console.Write("Escriba la fila del asiento: ");
+                                    Console.ForegroundColor = ConsoleColor.Cyan;
+                                    entrada = Console.ReadLine();
+                                    if (int.TryParse(entrada, out int fila))
                                     {
-                                        Console.WriteLine($"Escriba un número de fila valido. El número de filas del vuelo con el código {codigoVuelo} es de: {cantidadDeFilas} filas.");
-                                    }
-                                    else
-                                    {
-                                        Console.Write("Escriba el número de asiento: ");
-                                        entrada = Console.ReadLine();
-                                        if (int.TryParse(entrada, out int asiento))
+                                        fila--;
+                                        if (fila < 0 || fila > cantidadDeFilas)
                                         {
-                                            asiento--;
-                                            if (asiento < 0 || asiento > 10)
-                                            {
-                                                Console.WriteLine($"Escriba un número de asiento valido. El numero de asientos del vuelo con el código {codigoVuelo} es de: 10 asientos.");
-                                            }
-                                            else
-                                            {
-                                                if (listaDeVuelos[i].asientos[fila][asiento] == 1)
-                                                {
-                                                    Console.WriteLine("El asiento que seleccionó ya esta ocupado.");
-                                                }
-                                                else
-                                                {
-                                                    Console.WriteLine("Asiento registrado.");
-                                                    contador++;
-                                                    listaDeVuelos[i].asientos[fila][asiento] = 1;
-                                                }
-                                            }
+                                            Console.ForegroundColor = ConsoleColor.Red;
+                                            Console.Clear();
+                                            Console.WriteLine($"Escriba un número de fila valido. El número de filas del vuelo con el código {codigoVuelo} es de: {cantidadDeFilas} filas.\n");
                                         }
                                         else
                                         {
-                                            Console.WriteLine("Escriba un número.");
+                                            Console.ForegroundColor = ConsoleColor.DarkCyan;
+                                            Console.Write("Escriba el número de asiento: ");
+                                            Console.ForegroundColor = ConsoleColor.Cyan;
+                                            entrada = Console.ReadLine();
+                                            if (int.TryParse(entrada, out int asiento))
+                                            {
+                                                asiento--;
+                                                if (asiento < 0 || asiento > 10)
+                                                {
+                                                    Console.ForegroundColor = ConsoleColor.Red;
+                                                    Console.Clear();
+                                                    Console.WriteLine($"Escriba un número de asiento valido. El numero de asientos del vuelo con el código {codigoVuelo} es de: 10 asientos.\n");
+                                                }
+                                                else
+                                                {
+                                                    if (listaDeVuelos[i].asientos[fila][asiento] == 1)
+                                                    {
+                                                        Console.ForegroundColor = ConsoleColor.Red;
+                                                        Console.Clear();
+                                                        Console.WriteLine("El asiento que seleccionó ya esta ocupado.\n");
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.ForegroundColor = ConsoleColor.Green;
+                                                        Console.WriteLine("Asiento registrado.\n");
+                                                        contador++;
+                                                        listaDeVuelos[i].asientos[fila][asiento] = 1;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Console.Clear();
+                                                Console.ForegroundColor = ConsoleColor.Red;
+                                                Console.WriteLine("Escriba un número.\n");
+                                            }
                                         }
                                     }
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Escriba un número.");
+                                    else
+                                    {
+                                        Console.Clear();
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.Clear();
+                                        Console.WriteLine("Escriba un número.\n");
+                                    }
                                 }
                             }
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"{cantidadPasajeros} Pasajeros registrados.");
+                            listaDeVuelos[i].capacidadDisponible = listaDeVuelos[i].capacidadMaxima - cantidadPasajeros;
                         }
-                        Console.WriteLine($"{cantidadPasajeros} Pasajeros registrados.");
-                        listaDeVuelos[i].capacidadDisponible = listaDeVuelos[i].capacidadMaxima - cantidadPasajeros;
                     }
+                    
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Clear();
+                    Console.WriteLine("El código proporcionado no coincide con el de ningún vuelo creado.\n");
                 }
             }
         }
@@ -174,41 +214,58 @@ namespace TRABAJO_PRACTICO_FINAL
             int indiceLista = -1;
             int returnVacio = 0;
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.Write("Escriba el código del vuelo: ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
             string codigoUsuario = Console.ReadLine();
+            Console.Clear();
             for (int i = 0; i < listaDeVuelos.Count; i++)
             {
-                int asientosOcupados = listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible;
-                int ocupacionVuelo = (asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
-                if (codigoUsuario == listaDeVuelos[i].codigoVuelo)
+                if(codigoUsuario == listaDeVuelos[i].codigoVuelo)
                 {
-                    Console.WriteLine("---------------------------------------------------------");
-                    if (listaDeVuelos[i].clasificación == "internacional")
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                    int asientosOcupados = listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible;
+                    int ocupacionVuelo = (asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
+                    if (codigoUsuario == listaDeVuelos[i].codigoVuelo)
                     {
-                        Console.WriteLine($"Clasificación del vuelo: Internacional.");
+                        Console.WriteLine("---------------------------------------------------------");
+                        if (listaDeVuelos[i].clasificación == "internacional")
+                        {
+                            Console.WriteLine($"Clasificación del vuelo: Internacional.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Clasificación del vuelo: Nacional.");
+                        }
+                        Console.WriteLine($"Código: {listaDeVuelos[i].codigoVuelo}.");
+                        Console.WriteLine($"Fecha y hora de salida: {listaDeVuelos[i].fechaSalida}.");
+                        Console.WriteLine($"Fecha y hora de llegada: {listaDeVuelos[i].fechaLlegada}.");
+                        Console.WriteLine("Personal de cabina: ");
+                        Console.WriteLine($" Nombre del piloto: {listaDeVuelos[i].nombrePiloto}.");
+                        Console.WriteLine($" Nombre del copiloto: {listaDeVuelos[i].nombreCopiloto}.");
+                        Console.WriteLine($"Capacidad maxima de asientos del vuelo: {listaDeVuelos[i].capacidadMaxima}.");
+                        Console.WriteLine($"Ocupación: {listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible} / {listaDeVuelos[i].capacidadMaxima}.");
+                        Console.WriteLine($"Porcentaje: {ocupacionVuelo}%.");
+                        Console.WriteLine("---------------------------------------------------------\n\n");
+                        indiceLista = i;
+                        return indiceLista;
                     }
-                    else
-                    {
-                        Console.WriteLine($"Clasificación del vuelo: Nacional.");
-                    }
-                    Console.WriteLine($"Código: {listaDeVuelos[i].codigoVuelo}.");
-                    Console.WriteLine($"Fecha y hora de salida: {listaDeVuelos[i].fechaSalida}.");
-                    Console.WriteLine($"Fecha y hora de llegada: {listaDeVuelos[i].fechaLlegada}.");
-                    Console.WriteLine("Personal de cabina: ");
-                    Console.WriteLine($" Nombre del piloto: {listaDeVuelos[i].nombrePiloto}");
-                    Console.WriteLine($" Nombre del copiloto: {listaDeVuelos[i].nombreCopiloto}");
-                    Console.WriteLine($"Capacidad maxima de asientos del vuelo: {listaDeVuelos[i].capacidadMaxima}");
-                    Console.WriteLine($"Ocupación: {listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible} / {listaDeVuelos[i].capacidadMaxima}");
-                    Console.WriteLine($"Porcentaje: {ocupacionVuelo}%");
-                    Console.WriteLine("---------------------------------------------------------");
-                    indiceLista = i;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("El código proporcionado no coincide con el código de ningún vuelo registrado.");
+                    return indiceLista;
                 }
             }
             return indiceLista;
+
+
         }
 
         public static void ListaVuelos(List<Vuelo> listaDeVuelos)
         {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             for (int i = 0; i < listaDeVuelos.Count; i++)
             {
                 int asientosOcupados = listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible;
@@ -226,12 +283,12 @@ namespace TRABAJO_PRACTICO_FINAL
                 Console.WriteLine($"Fecha y hora de salida: {listaDeVuelos[i].fechaSalida}.");
                 Console.WriteLine($"Fecha y hora de llegada: {listaDeVuelos[i].fechaLlegada}.");
                 Console.WriteLine("Personal de cabina: ");
-                Console.WriteLine($" Nombre del piloto: {listaDeVuelos[i].nombrePiloto}");
-                Console.WriteLine($" Nombre del copiloto: {listaDeVuelos[i].nombreCopiloto}");
-                Console.WriteLine($"Capacidad maxima de asientos del vuelo: {listaDeVuelos[i].capacidadMaxima}");
-                Console.WriteLine($"Ocupación: {listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible} / {listaDeVuelos[i].capacidadMaxima}");
-                Console.WriteLine($"Porcentaje: {ocupacionVuelo}%");
-                if (i == listaDeVuelos.Count)
+                Console.WriteLine($" Nombre del piloto: {listaDeVuelos[i].nombrePiloto}.");
+                Console.WriteLine($" Nombre del copiloto: {listaDeVuelos[i].nombreCopiloto}.");
+                Console.WriteLine($"Capacidad maxima de asientos del vuelo: {listaDeVuelos[i].capacidadMaxima}.");
+                Console.WriteLine($"Ocupación: {listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible} / {listaDeVuelos[i].capacidadMaxima}.");
+                Console.WriteLine($"Porcentaje: {ocupacionVuelo}%.");
+                if (i == listaDeVuelos.Count - 1)
                 {
                     Console.WriteLine("---------------------------------------------------------");
                 }
