@@ -31,7 +31,7 @@ namespace TRABAJO_PRACTICO_FINAL
             this.asientos = asientos;
         }
 
-        public static void RegistrarPasajeros(List<Vuelo> listaDeVuelos)
+        public static void RegistrarPasajeros(List<Vuelo> listaDeVuelos, Aerolínea aerolinea, string filePath)
         {
             Console.Clear();
             int contador = 0;
@@ -109,6 +109,7 @@ namespace TRABAJO_PRACTICO_FINAL
                         }
                         Console.WriteLine($"{cantidadPasajeros} Pasajeros registrados.");
                         listaDeVuelos[i].capacidadDisponible = listaDeVuelos[i].capacidadMaxima - cantidadPasajeros;
+                        Program.GuardarArchivo(aerolinea, filePath);
                     }
                 }
             }
@@ -171,6 +172,8 @@ namespace TRABAJO_PRACTICO_FINAL
             string codigoUsuario = Console.ReadLine();
             for (int i = 0; i < listaDeVuelos.Count; i++)
             {
+                int asientosOcupados = listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible;
+                int ocupacionVuelo = (asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
                 if (codigoUsuario == listaDeVuelos[i].codigoVuelo)
                 {
                     Console.WriteLine("---------------------------------------------------------");
@@ -189,12 +192,45 @@ namespace TRABAJO_PRACTICO_FINAL
                     Console.WriteLine($" Nombre del piloto: {listaDeVuelos[i].nombrePiloto}");
                     Console.WriteLine($" Nombre del copiloto: {listaDeVuelos[i].nombreCopiloto}");
                     Console.WriteLine($"Capacidad maxima de asientos del vuelo: {listaDeVuelos[i].capacidadMaxima}");
-                    Console.WriteLine($"Porcentaje de ocupación: {listaDeVuelos[i].capacidadDisponible} / {listaDeVuelos[i].capacidadMaxima}");
+                    Console.WriteLine($"Ocupación: {listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible} / {listaDeVuelos[i].capacidadMaxima}");
+                    Console.WriteLine($"Porcentaje: {ocupacionVuelo}%");
                     Console.WriteLine("---------------------------------------------------------");
                     indiceLista = i;
                 }
             }
             return indiceLista;
+        }
+
+        public static void ListaVuelos(List<Vuelo> listaDeVuelos)
+        {
+            for(int i = 0; i < listaDeVuelos.Count; i++)
+            {
+                int asientosOcupados = listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible;
+                int ocupacionVuelo = (asientosOcupados * 100) / listaDeVuelos[i].capacidadMaxima;
+                Console.WriteLine("---------------------------------------------------------");
+                if (listaDeVuelos[i].clasificación == "internacional")
+                {
+                    Console.WriteLine($"Clasificación del vuelo: Internacional.");
+                }
+                else
+                {
+                    Console.WriteLine($"Clasificación del vuelo: Nacional.");
+                }
+                Console.WriteLine($"Código: {listaDeVuelos[i].codigoVuelo}.");
+                Console.WriteLine($"Fecha y hora de salida: {listaDeVuelos[i].fechaSalida}.");
+                Console.WriteLine($"Fecha y hora de llegada: {listaDeVuelos[i].fechaLlegada}.");
+                Console.WriteLine("Personal de cabina: ");
+                Console.WriteLine($" Nombre del piloto: {listaDeVuelos[i].nombrePiloto}");
+                Console.WriteLine($" Nombre del copiloto: {listaDeVuelos[i].nombreCopiloto}");
+                Console.WriteLine($"Capacidad maxima de asientos del vuelo: {listaDeVuelos[i].capacidadMaxima}");
+                Console.WriteLine($"Ocupación: {listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible} / {listaDeVuelos[i].capacidadMaxima}");
+                Console.WriteLine($"Porcentaje: {ocupacionVuelo}%");
+                if(i == listaDeVuelos.Count)
+                {
+                    Console.WriteLine("---------------------------------------------------------");
+                }
+                
+            }
         }
 
 

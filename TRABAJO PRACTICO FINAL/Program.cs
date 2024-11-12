@@ -2,18 +2,25 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Text.Json;
 using TRABAJO_PRACTICO_FINAL;
 
 class Program
 {
+
     public static bool vueloCreado = false;
     public static List<Vuelo> listaDeVuelos = new List<Vuelo>();
     public static int indiceLista;
+    public static string filePath = "aerolinea.json";
+    public static Aerolínea aerolinea;
     static void Main()
     {
         DatosAerolinea();
         Inicio();
-        Menú();
+        Console.WindowHeight = 45;
+        Console.WindowWidth = 180;
+        Menú(aerolinea);
     }
     static void Inicio() // Función correspondiente a la pantalla de bienvenida.
     {
@@ -57,7 +64,7 @@ class Program
         }
         Console.ResetColor();
     }
-    static void Menú() //Función correspondiente al menu principal del programa.
+    static void Menú(Aerolínea aerolinea) //Función correspondiente al menu principal del programa.
     {
         ConsoleKeyInfo Flecha;
         Console.CursorVisible = false;
@@ -104,21 +111,43 @@ class Program
             case 0:
                 Console.Clear();
                 CreaciónVuelo(listaDeVuelos, ref vueloCreado);
+                Console.WriteLine(listaDeVuelos.Count);
                 EsperarYVolverAlMenu();
                 break;
             case 1:
                 Console.Clear();
-                Vuelo.RegistrarPasajeros(listaDeVuelos);
+                if(vueloCreado)
+                {
+                    Vuelo.RegistrarPasajeros(listaDeVuelos, aerolinea, filePath);
+                }
+                else
+                {
+                    Console.WriteLine("No se ha creado ningún vuelo. No se puede mostrar el vuelo con mayor ocupación");
+                }
                 EsperarYVolverAlMenu();
                 break;
             case 2:
                 Console.Clear();
-                Vuelo.CalcularOcupacionMedia(listaDeVuelos);
+                if(vueloCreado)
+                {
+                    Vuelo.CalcularOcupacionMedia(listaDeVuelos);
+                }
+                else
+                {
+                    Console.WriteLine("No se ha creado ningún vuelo. No se puede mostrar el vuelo con mayor ocupación");
+                }
                 EsperarYVolverAlMenu();
                 break;
             case 3:
                 Console.Clear();
-                Vuelo.VueloConMayorOcupacion(listaDeVuelos);
+                if (vueloCreado)
+                {
+                    Vuelo.VueloConMayorOcupacion(listaDeVuelos);
+                }
+                else
+                {
+                    Console.WriteLine("No se ha creado ningún vuelo. No se puede mostrar el vuelo con mayor ocupación");
+                }
                 Thread.Sleep(1500);
                 EsperarYVolverAlMenu();
                 break;
@@ -130,18 +159,26 @@ class Program
                 }
                 else
                 {
-                    Console.WriteLine("El vuelo no ha sido creado. No se puede mostrar el estado del vuelo.");
+                    Console.WriteLine("No se ha creado ningún vuelo. No se puede mostrar el estado del vuelo.");
                 }
                 EsperarYVolverAlMenu();
                 break;
             case 5:
                 Console.Clear();
-
+                if(vueloCreado)
+                {
+                    Vuelo.ListaVuelos(listaDeVuelos);
+                }
+                else
+                {
+                    Console.WriteLine("No se ha creado ningún vuelo. No se puede mostrar el estado del vuelo.");
+                }
                 EsperarYVolverAlMenu();
                 break;
             case 6:
                 Console.Clear();
-
+                CargarDatos(filePath, ref vueloCreado);
+                Console.WriteLine(listaDeVuelos.Count);
                 EsperarYVolverAlMenu();
                 break;
             case 7:
@@ -184,6 +221,10 @@ class Program
                     "\n -----------------------------------------------------------------";
             case 6:
                 return "------------------------------------------------------------------\n" +
+                    " > Cargar datos                                                  |" +
+                    "\n -----------------------------------------------------------------";
+            case 7:
+                return "------------------------------------------------------------------\n" +
                     " > Salir del sistema.                                            |" +
                     "\n -----------------------------------------------------------------";
             default:
@@ -207,13 +248,14 @@ class Program
                 volverValido = true;
             }
         }
-        Menú(); // Volver al menú principal
+        Menú(aerolinea); // Volver al menú principal
     }
     public static void DatosAerolinea()
     {
         string razonSocial = "Aerolíneas Argentinas S.A";
         string telefono = "011 5199-3555";
         string domicilio = "Aeroparque Jorge Newbery, CABA, Argentina";
+        aerolinea = new Aerolínea(razonSocial, telefono, domicilio, listaDeVuelos);
     }
     static void CreaciónVuelo(List<Vuelo> listaDeVuelos, ref bool vueloCreado)
     {
@@ -375,6 +417,7 @@ class Program
             {
                 Console.WriteLine("\nVuelo Creado.");
                 vueloCreado = true;
+                                GuardarArchivo(aerolinea, filePath);
             }
             else
             {
@@ -491,7 +534,51 @@ class Program
 
     }
 
+    public static void GuardarArchivo(Aerolínea aerolinea, string filePath)
+    {
+        try
+        {
+            string json = JsonSerializer.Serialize(aerolinea);
+            File.WriteAllText(filePath, json);
+            Console.WriteLine("Objeto guardado.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al guardar el objeto: {ex.Message}");
+        }
+        
+    }
 
+    static Aerolínea CargarDatos(string filePath, ref bool vueloCreado)
+    {
+        try
+        {
+            if(File.Exists(filePath))
+            {
+                string json = File.ReadAllText(filePath);
 
+                Aerolínea aerolinea = JsonSerializer.Deserialize<Aerolínea>(json);
+
+                Console.WriteLine("Datos cargados.");
+                vueloCreado = true;
+                return aerolinea;
+            }
+            else
+            {
+                Console.WriteLine("El archivo no existe.");
+                return null;
+                Thread.Sleep(2500);
+            }
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error al cargar el objeto: {ex.Message}");
+            Thread.Sleep(2500);
+            return null;
+        }
+
+        return null;
+
+    }
 
 }
