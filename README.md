@@ -51,13 +51,14 @@ Sigue estos pasos para utilizar el programa:
 
 6. **Listar vuelos ordenados por ocupación**:  
    Muestra todos los vuelos ordenados según su porcentaje de ocupación, de mayor a menor.
-7. **Guardar datos**:
+   
+6. **Guardar datos**:  
    Guarda los datos de los vuelos cargados.
 
-9. **Cargar datos**:  
+8. **Cargar datos**:  
    Carga los datos de los vuelos guardados.
 
-10. **Salir del Sistema**:  
+9. **Salir del Sistema**:  
    Cierra la sesión y sale del sistema.
 
 ## 🔨 *Funcionalidad destacada del proyecto*
