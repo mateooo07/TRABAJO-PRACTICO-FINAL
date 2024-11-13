@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -98,7 +99,9 @@ namespace TRABAJO_PRACTICO_FINAL
                                         {
                                             Console.ForegroundColor = ConsoleColor.Red;
                                             Console.Clear();
-                                            Console.WriteLine($"Escriba un número de fila valido. El número de filas del vuelo con el código {codigoVuelo} es de: {cantidadDeFilas} filas.");
+                                            Console.WriteLine($"Escriba un número de fila valido. El número de filas del vuelo con el código {codigoVuelo} es de: {cantidadDeFilas} filas.\n");
+                                            Thread.Sleep(1500);
+                                            Console.Clear();
                                         }
                                         else
                                         {
@@ -114,6 +117,8 @@ namespace TRABAJO_PRACTICO_FINAL
                                                     Console.ForegroundColor = ConsoleColor.Red;
                                                     Console.Clear();
                                                     Console.WriteLine($"Escriba un número de asiento valido. El numero de asientos del vuelo con el código {codigoVuelo} es de: 10 asientos.\n");
+                                                    Thread.Sleep(1500);
+                                                    Console.Clear();
                                                 }
                                                 else
                                                 {
@@ -121,12 +126,14 @@ namespace TRABAJO_PRACTICO_FINAL
                                                     {
                                                         Console.ForegroundColor = ConsoleColor.Red;
                                                         Console.Clear();
-                                                        Console.WriteLine("El asiento que seleccionó ya esta ocupado.");
+                                                        Console.WriteLine("El asiento que seleccionó ya esta ocupado.\n");
+                                                        Thread.Sleep(1500);
+                                                        Console.Clear();
                                                     }
                                                     else
                                                     {
                                                         Console.ForegroundColor = ConsoleColor.Green;
-                                                        Console.WriteLine("Asiento registrado.\n");
+                                                        Console.WriteLine("\nAsiento registrado.\n");
                                                         contador++;
                                                         listaDeVuelos[i].asientos[fila][asiento] = 1;
                                                     }
@@ -136,7 +143,9 @@ namespace TRABAJO_PRACTICO_FINAL
                                             {
                                                 Console.Clear();
                                                 Console.ForegroundColor = ConsoleColor.Red;
-                                                Console.WriteLine("Escriba un número.");
+                                                Console.WriteLine("Escriba un número.\n");
+                                                Thread.Sleep(1500);
+                                                Console.Clear();
                                             }
                                         }
                                     }
@@ -145,7 +154,9 @@ namespace TRABAJO_PRACTICO_FINAL
                                         Console.Clear();
                                         Console.ForegroundColor = ConsoleColor.Red;
                                         Console.Clear();
-                                        Console.WriteLine("Escriba un número.");
+                                        Console.WriteLine("Escriba un número.\n");
+                                        Thread.Sleep(1500);
+                                        Console.Clear();
                                     }
                                 }
                             }
