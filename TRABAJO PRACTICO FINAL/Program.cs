@@ -196,7 +196,7 @@ class Program
                 break;
             case 8:
                 Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.WriteLine("Saliendo del sistema...");
                 Thread.Sleep(1500);
                 Console.ResetColor();
@@ -254,8 +254,8 @@ class Program
         bool volverValido = false;
         while (volverValido != true)
         {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("Presiona 'M' para volver al menú.");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("\nPresiona 'M' para volver al menú.");
 
             volverMenu = Console.ReadKey(true);
             Console.ResetColor();
@@ -296,7 +296,7 @@ class Program
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("Escriba de nuevo la clasificación del vuelo.\n");
+            Console.WriteLine("Escriba de nuevo la clasificación del vuelo.");
             return;
         }
         else if (clasificacion == "internacional")
@@ -312,7 +312,7 @@ class Program
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("Debe escribir un número igual o superior a 400.\n");
+                    Console.WriteLine("Debe escribir un número igual o superior a 400.");
                     return;
                 }
 
@@ -321,7 +321,7 @@ class Program
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("Debe escribir un número.");
+                Console.WriteLine("Debe escribir un número.");
                 return;
             }
             codigoVuelo = "AA" + codigo.ToString();
@@ -339,7 +339,7 @@ class Program
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("Debe escribir un número igual o superior a 100 y menor a 400.\n");
+                    Console.WriteLine("Debe escribir un número igual o superior a 100 y menor a 400.");
                     return;
                 }
             }
@@ -347,7 +347,7 @@ class Program
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("Debe escribir un número.\n");
+                Console.WriteLine("Debe escribir un número.");
                 return;
             }
 
@@ -359,7 +359,7 @@ class Program
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Ya existe un vuelo con ese código de vuelo.\n");
+                Console.WriteLine("Ya existe un vuelo con ese código de vuelo.");
                 return;
             }
         }
@@ -376,7 +376,7 @@ class Program
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Escriba una fecha posterior o igual a la actual.\n");
+                    Console.WriteLine("Escriba una fecha posterior o igual a la actual.");
                     Thread.Sleep(1500);
                     Console.Clear();
                 }
@@ -389,7 +389,7 @@ class Program
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Escriba un formato de fecha válido.\n");
+                Console.WriteLine("Escriba un formato de fecha válido.");
                 Thread.Sleep(1500);
                 Console.Clear();
             }
@@ -407,7 +407,7 @@ class Program
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Escriba una fecha posterior a la fecha de salida.\n");
+                    Console.WriteLine("Escriba una fecha posterior a la fecha de salida.");
                     Thread.Sleep(1500);
                     Console.Clear();
                 }
@@ -420,7 +420,7 @@ class Program
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Escriba un formato de fecha valido.\n");
+                Console.WriteLine("Escriba un formato de fecha valido.");
                 Thread.Sleep(1500);
                 Console.Clear();
             }
@@ -435,14 +435,14 @@ class Program
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Escriba un nombre válido.\n");
+                Console.WriteLine("Escriba un nombre válido.");
                 return;
             }
         }
         if(nombrePiloto == "" || nombrePiloto == " ")
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Escriba un nombre válido.\n");
+            Console.WriteLine("Escriba un nombre válido.");
             return;
         }
         Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -455,7 +455,7 @@ class Program
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Escriba un nombre válido.\n");
+                Console.WriteLine("Escriba un nombre válido.");
                 return;
             }
         }
@@ -463,7 +463,7 @@ class Program
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Escriba un nombre válido.\n");
+            Console.WriteLine("Escriba un nombre válido.");
             return;
         }
         Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -481,7 +481,7 @@ class Program
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("\nVuelo Creado.");
+                Console.WriteLine("Vuelo Creado.");
                 vueloCreado = true;
 
             }
@@ -489,14 +489,14 @@ class Program
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Clear();
-                Console.WriteLine("Escriba una capacidad máxima válida (entre 60 y 200, múltiplo de 10).\n");
+                Console.WriteLine("Escriba una capacidad máxima válida (entre 60 y 200, múltiplo de 10).");
             }
         }
         else
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Escriba un número\n");
+            Console.WriteLine("Escriba un número");
             return;
         }
 
@@ -612,7 +612,7 @@ class Program
 
         try
         {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.ForegroundColor = ConsoleColor.Green;
             XmlSerializer serializer = new XmlSerializer(typeof(Aerolínea));
             using (FileStream stream = new FileStream(filePath, FileMode.Create))
             {

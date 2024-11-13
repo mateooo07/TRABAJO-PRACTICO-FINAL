@@ -56,7 +56,7 @@ namespace TRABAJO_PRACTICO_FINAL
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Clear();
-                        Console.WriteLine("No puede registrarle ningun pasajero a este vuelo, porque ya despego.\n");
+                        Console.WriteLine("No puede registrarle ningun pasajero a este vuelo, porque ya despegó.");
                     }
                     else
                     {
@@ -70,7 +70,7 @@ namespace TRABAJO_PRACTICO_FINAL
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.Clear();
-                                Console.WriteLine("La cantidad de pasajeros a registrar excede la capacidad maxima del vuelo.\n");
+                                Console.WriteLine("La cantidad de pasajeros a registrar excede la capacidad maxima del vuelo.");
                                 return;
                             }
                             else if (cantidadPasajeros > listaDeVuelos[i].capacidadDisponible)
@@ -78,7 +78,7 @@ namespace TRABAJO_PRACTICO_FINAL
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.Clear();
-                                Console.WriteLine("La cantidad de pasajeros a registrar excede la cantidad disponible.\n");
+                                Console.WriteLine("La cantidad de pasajeros a registrar excede la cantidad disponible.");
                                 return;
                             }
                             else
@@ -98,7 +98,7 @@ namespace TRABAJO_PRACTICO_FINAL
                                         {
                                             Console.ForegroundColor = ConsoleColor.Red;
                                             Console.Clear();
-                                            Console.WriteLine($"Escriba un número de fila valido. El número de filas del vuelo con el código {codigoVuelo} es de: {cantidadDeFilas} filas.\n");
+                                            Console.WriteLine($"Escriba un número de fila valido. El número de filas del vuelo con el código {codigoVuelo} es de: {cantidadDeFilas} filas.");
                                         }
                                         else
                                         {
@@ -121,7 +121,7 @@ namespace TRABAJO_PRACTICO_FINAL
                                                     {
                                                         Console.ForegroundColor = ConsoleColor.Red;
                                                         Console.Clear();
-                                                        Console.WriteLine("El asiento que seleccionó ya esta ocupado.\n");
+                                                        Console.WriteLine("El asiento que seleccionó ya esta ocupado.");
                                                     }
                                                     else
                                                     {
@@ -136,7 +136,7 @@ namespace TRABAJO_PRACTICO_FINAL
                                             {
                                                 Console.Clear();
                                                 Console.ForegroundColor = ConsoleColor.Red;
-                                                Console.WriteLine("Escriba un número.\n");
+                                                Console.WriteLine("Escriba un número.");
                                             }
                                         }
                                     }
@@ -145,7 +145,7 @@ namespace TRABAJO_PRACTICO_FINAL
                                         Console.Clear();
                                         Console.ForegroundColor = ConsoleColor.Red;
                                         Console.Clear();
-                                        Console.WriteLine("Escriba un número.\n");
+                                        Console.WriteLine("Escriba un número.");
                                     }
                                 }
                             }
@@ -271,6 +271,8 @@ namespace TRABAJO_PRACTICO_FINAL
         public static void ListaVuelos(List<Vuelo> listaDeVuelos)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
+            listaDeVuelos.Sort((y, x) => (((double)x.capacidadMaxima - x.capacidadDisponible) * 100 / x.capacidadMaxima).CompareTo(((double)y.capacidadMaxima - y.capacidadDisponible) * 100 / y.capacidadMaxima)
+);
             for (int i = 0; i < listaDeVuelos.Count; i++)
             {
                 int asientosOcupados = listaDeVuelos[i].capacidadMaxima - listaDeVuelos[i].capacidadDisponible;
